@@ -7,18 +7,19 @@ import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DataFormComponent } from './data-form/data-form.component';
+import {DataFormModule} from './data-form/data-form.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    DataFormComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    TemplateFormModule
+    TemplateFormModule,
+    DataFormModule
   ],
   providers: [],
   bootstrap: [AppComponent]
