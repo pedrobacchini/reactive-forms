@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 
 @Component({
@@ -18,21 +18,32 @@ export class DataFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    /*this.form = new FormGroup({
-      name: new FormControl(null),
-      email: new FormControl(null)
-    });*/
-
     this.form = this.formBuilder.group({
-      nome: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       email: [null, [Validators.required, Validators.email]]
     });
   }
 
   onSubmit() {
-    console.log(this.form.value);
-
     this.http.post('https://httpbin.org/post', JSON.stringify(this.form.value))
       .subscribe(() => this.form.reset(), (error: any) => alert(error));
+  }
+
+  applyCssError(field: string) {
+    return {
+      'has-error': this.checkValidTouched(field),
+      'has-feedback': this.checkValidTouched(field)
+    };
+  }
+
+  checkValidTouched(field: string): boolean {
+    return !this.form.get(field).valid && this.form.get(field).touched;
+  }
+
+  checkValidEmail(): boolean {
+    const email = this.form.get('email');
+    if (email.errors) {
+      return email.errors['email'] && email.touched;
+    }
   }
 }
