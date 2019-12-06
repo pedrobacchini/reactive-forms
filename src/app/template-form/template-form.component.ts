@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import {Component, OnInit} from '@angular/core';
 import 'rxjs/add/operator/map';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-template-form',
@@ -12,58 +12,57 @@ export class TemplateFormComponent implements OnInit {
   usuario: any = {
     nome: null,
     email: null
-  }
+  };
 
-  onSubmit(form){
+  onSubmit(form) {
     console.log(form);
 
-    //form.value
-    //console.log(this.usuario);
+    // form.value
+    // console.log(this.usuario);
 
     this.http.post('https://httpbin.org/post', JSON.stringify(form.value))
-      .map(res => res)
       .subscribe(dados => console.log(dados));
   }
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) {
+  }
 
   ngOnInit() {
   }
 
-  verificaValidTouched(campo){
+  verificaValidTouched(campo) {
     return !campo.valid && campo.touched;
   }
 
-  aplicaCssErro(campo){
+  aplicaCssErro(campo) {
     return {
       'has-error': this.verificaValidTouched(campo),
       'has-feedback': this.verificaValidTouched(campo)
-    }
+    };
   }
 
-  consultaCEP(cep, form){
-    //Nova variável "cep" somente com dígitos.
+  consultaCEP(cep, form) {
+    // Nova variável "cep" somente com dígitos.
     cep = cep.replace(/\D/g, '');
 
-    //Verifica se campo cep possui valor informado.
-    if (cep != "") {
-      
-      //Expressão regular para validar o CEP.
-      var validacep = /^[0-9]{8}$/;
+    // Verifica se campo cep possui valor informado.
+    if (cep !== '') {
 
-      //Valida o formato do CEP.
-      if(validacep.test(cep)) {
+      // Expressão regular para validar o CEP.
+      const validacep = /^[0-9]{8}$/;
+
+      // Valida o formato do CEP.
+      if (validacep.test(cep)) {
 
         this.resetaDadosForm(form);
 
         this.http.get(`//viacep.com.br/ws/${cep}/json`)
-          .map(dados => dados.json())
           .subscribe(dados => this.populaDadosForm(dados, form));
       }
     }
   }
 
-  populaDadosForm(dados, formulario){
+  populaDadosForm(dados, formulario) {
     /*formulario.setValue({
       nome: formulario.value.nome,
       email: formulario.value.email,
@@ -81,7 +80,7 @@ export class TemplateFormComponent implements OnInit {
     formulario.form.patchValue({
       endereco: {
         rua: dados.logradouro,
-        //cep: dados.cep,
+        // cep: dados.cep,
         complemento: dados.complemento,
         bairro: dados.bairro,
         cidade: dados.localidade,
@@ -89,10 +88,10 @@ export class TemplateFormComponent implements OnInit {
       }
     });
 
-    //console.log(form);
+    // console.log(form);
   }
 
-  resetaDadosForm(formulario){
+  resetaDadosForm(formulario) {
     formulario.form.patchValue({
       endereco: {
         rua: null,
