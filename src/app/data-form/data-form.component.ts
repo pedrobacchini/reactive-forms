@@ -20,7 +20,14 @@ export class DataFormComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-      email: [null, [Validators.required, Validators.email]]
+      email: [null, [Validators.required, Validators.email]],
+      cep: [null, Validators.required],
+      number: [null, Validators.required],
+      complement: [null],
+      street: [null, Validators.required],
+      neighborhood: [null, Validators.required],
+      city: [null, Validators.required],
+      state: [null, Validators.required]
     });
   }
 
