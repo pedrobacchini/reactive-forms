@@ -51,8 +51,54 @@ export class DataFormComponent implements OnInit {
 
   checkValidEmail(): boolean {
     const email = this.form.get('email');
-    if (email.errors) {
-      return email.errors['email'] && email.touched;
+    if (email.errors) return email.errors['email'] && email.touched;
+  }
+
+  consultCEP() {
+
+    let cep = this.form.get('address.cep').value;
+
+    // Nova variável "cep" somente com dígitos.
+    cep = cep.replace(/\D/g, '');
+
+    // Verifica se campo cep possui valor informado.
+    if (cep !== '') {
+
+      // Expressão regular para validar o CEP.
+      const validacep = /^[0-9]{8}$/;
+
+      // Valida o formato do CEP.
+      if (validacep.test(cep)) {
+
+        this.resetAddressField();
+
+        this.http.get(`//viacep.com.br/ws/${cep}/json`)
+          .subscribe(addressData => this.pathAddressData(addressData));
+      }
     }
+  }
+
+  private resetAddressField() {
+    this.form.patchValue({
+      address: {
+        street: null,
+        complement: null,
+        neighborhood: null,
+        city: null,
+        state: null
+      }
+    });
+  }
+
+  private pathAddressData(addressData: any) {
+    this.form.patchValue({
+      address: {
+        street: addressData.logradouro,
+        complement: addressData.complemento,
+        neighborhood: addressData.bairro,
+        city: addressData.localidade,
+        state: addressData.uf
+      }
+    });
   }
 }

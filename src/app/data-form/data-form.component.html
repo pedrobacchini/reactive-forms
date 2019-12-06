@@ -35,7 +35,7 @@
 
       <div class="col-md-3" [ngClass]="applyCssError('address.cep')">
         <label for="cep" class="control-label">CEP</label>
-        <input type="text" class="form-control" id="cep" formControlName="cep">
+        <input type="text" class="form-control" id="cep" formControlName="cep" (blur)="consultCEP()">
         <app-campo-control-erro
           [mostrarErro]="checkValidTouched('address.cep')"
           msgErro="CEP is required.">
